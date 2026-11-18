@@ -21,10 +21,6 @@ import {
   PokemonBadgeType,
   type PokemonBadgeType as PokemonBadgeTypeName,
 } from "@/components/compodex/ui/badge-type"
-import {
-  usePokemonGenerationNameList,
-  usePokemonTypeNameList,
-} from "@/services/pokemon.service"
 import { Filter } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -62,7 +58,22 @@ function capitalize(s: string) {
   return s.slice(0, 1).toUpperCase() + s.slice(1)
 }
 
-export function PokedexFilterMenu({ className }: { className?: string }) {
+export type PokedexFilterMenuProps = {
+  className?: string
+  typeNames: string[]
+  generationNames: string[]
+  typesLoading?: boolean
+  gensLoading?: boolean
+}
+
+/** Presentational filter block. The application supplies available options. */
+export function PokedexFilterMenu({
+  className,
+  typeNames,
+  generationNames,
+  typesLoading = false,
+  gensLoading = false,
+}: PokedexFilterMenuProps) {
   const {
     filters,
     toggleGeneration,
@@ -74,11 +85,6 @@ export function PokedexFilterMenu({ className }: { className?: string }) {
     clearFilters,
     hasActiveFilters,
   } = usePokedex()
-
-  const { data: typeNames = [], isLoading: typesLoading } =
-    usePokemonTypeNameList()
-  const { data: generationNames = [], isLoading: gensLoading } =
-    usePokemonGenerationNameList()
 
   const sortedTypes = sortTypeNames(typeNames)
 
