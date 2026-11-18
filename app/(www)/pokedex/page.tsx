@@ -3,7 +3,11 @@
 import { useState } from "react"
 import { Page } from "@/components/layout/page"
 import { type NamedAPIResource } from "pokenode-ts"
-import { usePokemonNameIndex } from "@/services/pokemon.service"
+import {
+  usePokemonNameIndex,
+  usePokemonTypeNameList,
+  usePokemonGenerationNameList,
+} from "@/services/pokemon.service"
 import {
   EMPTY_POKEDEX_FILTERS,
   Pokedex,
@@ -43,6 +47,9 @@ export default function PokedexPage() {
 
   // Data layer — exclusive to this app, never part of the primitives.
   const { data: allPokemon, isLoading, isError } = usePokemonNameIndex()
+  const { data: typeNames = [], isLoading: typesLoading } = usePokemonTypeNameList()
+  const { data: generationNames = [], isLoading: gensLoading } =
+    usePokemonGenerationNameList()
   const { matched, isLoadingFilters } = usePokedexFilteredList(
     allPokemon,
     queryNormalized,
@@ -73,7 +80,12 @@ export default function PokedexPage() {
           <div className="flex flex-col min-w-0 flex-1 items-end justify-end gap-2">
             <div className="min-w-0 w-full max-w-sm flex items-center gap-2">
               <PokedexSearch className="min-w-0 w-full" />
-              <PokedexFilterMenu />
+              <PokedexFilterMenu
+                typeNames={typeNames}
+                generationNames={generationNames}
+                typesLoading={typesLoading}
+                gensLoading={gensLoading}
+              />
             </div>
           </div>
         </Page.Header>
